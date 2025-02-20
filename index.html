@@ -16,7 +16,7 @@
         
         <div class="todo-input">
           <input type="text"v-model="text" name="todo" maxlength="30" placeholder="請輸入" />
-          <button v-if="isEditing" type="button"@click="onAdd">新增</button>
+          <button v-if="isEditing" type="button"@click="onAdd" :isabled="isMax">新增</button>
           <button v-if="editIndex !isEditing" type="button" @click="onSave">儲存</button>
           <button type="button" class="!bg-transparent" v-if="false" @click="onCancel">取消</button>
         </div>
@@ -53,7 +53,7 @@
         const editIndex=ref(null);
 
         const isEditing = computed(() => editIndex.value !== null);
-
+         const isMax=computed(()=>todos.value.length>=5);
         function onAdd(){
           todos.value.push(text.value);
           text.value="";
@@ -91,7 +91,7 @@
           editIndex.value=null;
         }
         function onSave(){
-          
+
           if(editIndex.value===null){
             return;
           }    
@@ -111,6 +111,7 @@ todos.value[editIndex.value]=text.value;
           isEditing,
           onCancel,
           onFinished,
+          isMax
         };
       },
     }).mount("#app");
