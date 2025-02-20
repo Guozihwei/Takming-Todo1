@@ -18,7 +18,7 @@
           <input type="text"v-model="text" name="todo" maxlength="30" placeholder="請輸入" />
           <button v-if="isEditing" type="button"@click="onAdd">新增</button>
           <button v-if="editIndex !isEditing" type="button" @click="onSave">儲存</button>
-          <button type="button" class="!bg-transparent" v-if="false">取消</button>
+          <button type="button" class="!bg-transparent" v-if="false" @click="onCancel">取消</button>
         </div>
 
         <div  class="absolute w-full">
@@ -30,7 +30,7 @@
               </div>
               <div class="todo-item-actions material-symbols-outlined">
                 <button type="button"@click="onEdit(todo,idx)">edit</button>
-                <button class="text-green-800" type="button">check</button>
+                <button class="text-green-800" type="button" @click="onFinished(todo,idx)">check</button>
               </div>
             </li>
           </ul>
@@ -67,7 +67,35 @@
           if(editIndex.value===null){
             return;
           }
-          todos.value[editIndex.value]=text.value;
+          clearEdit();
+          function onCancel(){
+             clearEdit();
+
+          }
+          function clearEdit()
+{
+  text.value="";
+  editIndex.value=null;
+}      
+          function onFinished(todo,idx){
+         const isConfirm= confirm(`是否完成:"$(todo)?`);
+         if(!isConfirm)return;
+         todos.value.splice(idx,1);
+       }
+        }
+        function onCancel(){
+          clearEdit();
+        }
+        function clearEdit(){
+          text.value="";
+          editIndex.value=null;
+        }
+        function onSave(){
+          
+          if(editIndex.value===null){
+            return;
+          }    
+todos.value[editIndex.value]=text.value;
           text.value="";
           editIndex.value=null;
           console.log("save");
@@ -81,6 +109,8 @@
           onSave,
           editIndex,
           isEditing,
+          onCancel,
+          onFinished,
         };
       },
     }).mount("#app");
