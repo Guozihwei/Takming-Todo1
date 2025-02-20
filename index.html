@@ -16,8 +16,9 @@
         
         <div class="todo-input">
           <input type="text"v-model="text" name="todo" maxlength="30" placeholder="請輸入" />
-          <button type="button"@click="onAdd">新增</button><button type="button" v-if="false">儲存</button
-          ><button type="button" class="!bg-transparent" v-if="false">取消</button>
+          <button v-if="isEditing" type="button"@click="onAdd">新增</button>
+          <button v-if="editIndex !isEditing" type="button" @click="onSave">儲存</button>
+          <button type="button" class="!bg-transparent" v-if="false">取消</button>
         </div>
 
         <div  class="absolute w-full">
@@ -28,7 +29,7 @@
                {{todo}}
               </div>
               <div class="todo-item-actions material-symbols-outlined">
-                <button type="button">edit</button>
+                <button type="button"@click="onEdit(todo,idx)">edit</button>
                 <button class="text-green-800" type="button">check</button>
               </div>
             </li>
@@ -42,22 +43,44 @@
     import {
       createApp,
       ref,
+      computed
     } from "https://unpkg.com/vue@3/dist/vue.esm-browser.js";
 
     createApp({
       setup() {
         const text=ref("");
         const todos=ref([]);
+        const editIndex=ref(null);
+
+        const isEditing = computed(() => editIndex.value !== null);
+
         function onAdd(){
           todos.value.push(text.value);
           text.value="";
-
+        }
+        function onEdit(todo,idx){
+          text.value=todo;
+          editIndex.value=idx;
+          console.log(todo,idx);
+        }
+        function onSave(){
+          if(editIndex.value===null){
+            return;
+          }
+          todos.value[editIndex.value]=text.value;
+          text.value="";
+          editIndex.value=null;
+          console.log("save");
         }
 
         return{
           text,
           onAdd,
           todos,
+          onEdit,
+          onSave,
+          editIndex,
+          isEditing,
         };
       },
     }).mount("#app");
