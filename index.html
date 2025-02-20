@@ -20,12 +20,12 @@
           ><button type="button" class="!bg-transparent" v-if="false">取消</button>
         </div>
 
-        <div v-if="false" class="absolute w-full">
+        <div  class="absolute w-full">
           <ul class="todo-list">
-            <li v-for="i in 5" :key="i" class="todo-item">
+            <li v-for="(todo, idx) in todos" :key="idx" class="todo-item">
               <div>
-                <span class="mr-1 font-mono">{{i}}.</span>
-                項目 {{i}}
+                <span class="mr-1 font-mono">{{idx+1}}.</span>
+               {{todo}}
               </div>
               <div class="todo-item-actions material-symbols-outlined">
                 <button type="button">edit</button>
@@ -47,13 +47,17 @@
     createApp({
       setup() {
         const text=ref("");
+        const todos=ref([]);
         function onAdd(){
-          console.log(text.value);
+          todos.value.push(text.value);
+          text.value="";
+
         }
 
         return{
           text,
           onAdd,
+          todos,
         };
       },
     }).mount("#app");
